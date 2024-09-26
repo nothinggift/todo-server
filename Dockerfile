@@ -15,6 +15,9 @@ RUN pnpm install --frozen-lockfile
 # 复制剩余的应用代码
 COPY . .
 
+# 生成 Prisma 客户端
+RUN pnpm prisma generate
+
 # 构建应用
 RUN pnpm run build
 
@@ -27,6 +30,9 @@ WORKDIR /app
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
+
+# 复制 Prisma 模式文件
+COPY --from=builder /app/prisma ./prisma
 
 # 暴露应用运行的端口（NestJS 默认为 3000）
 EXPOSE 3000
