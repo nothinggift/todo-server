@@ -9,11 +9,11 @@ RUN npm install -g pnpm
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 
-COPY --chown=node:node . .
-RUN npx prisma generate \
-    && npm run build \
-    && npm prune --omit=dev
+COPY . .
 
+RUN pnpm prisma generate
+RUN pnpm run build
+RUN pnpm prune --prod
 # ---
 
 FROM node:20-alpine
