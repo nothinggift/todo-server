@@ -1,0 +1,11 @@
+stages:
+  - build
+build:
+  image: docker:latest
+  stage: build
+  only:
+    - tags
+  script:
+    - docker build -t "$CI_PROJECT_NAME" .
+    - docker image tag "$CI_PROJECT_NAME" registry.moke.cloud/project/"$CI_PROJECT_NAME":"$CI_COMMIT_TAG"
+    - docker image push --all-tags registry.moke.cloud/project/"$CI_PROJECT_NAME"
